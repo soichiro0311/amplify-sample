@@ -1,24 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import MaterialTable from 'material-table';
+import axios from 'axios';
 
 function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        'https://mlebl2hvke.execute-api.ap-northeast-1.amazonaws.com/dev/user',
+      );
+
+      setData(result.data);
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(data)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <MaterialTable
+        columns={[
+          { title: 'ユーザ', field: 'userId' }
+        ]}
+        data={data}
+        options={{
+          showTitle: false,
+        }}
+      />
+
     </div>
   );
 }
